@@ -1,5 +1,6 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
@@ -15,13 +16,32 @@ export default function TabLayout() {
                 headerStyle: {
                     backgroundColor: "#222",
                 },
+                tabBarActiveTintColor: "lightskyblue",
+                headerTitleAlign: "center",
                 headerTintColor: "#eee",
+                headerLeft: () => (
+                    <Pressable>
+                        {({ pressed }) => (
+                            <FontAwesome
+                                name="repeat"
+                                size={25}
+                                style={{
+                                    marginLeft: 15,
+                                    paddingRight: 20,
+                                    opacity: pressed ? 0.5 : 1,
+                                    color: "#eee",
+                                }}
+                            />
+                        )}
+                    </Pressable>
+                ),
+
                 headerRight: () => (
-                    <Link href="/modal" asChild>
+                    <Link href="/details" asChild>
                         <Pressable>
                             {({ pressed }) => (
                                 <FontAwesome
-                                    name="circle"
+                                    name="bars"
                                     size={25}
                                     style={{
                                         marginRight: 15,
@@ -39,12 +59,18 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: "Heartfull",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome size={20} name="heart" color={color} />
+                    ),
                 }}
             />
             <Tabs.Screen
                 name="two"
                 options={{
                     title: "History",
+                    tabBarIcon: ({ color }) => (
+                        <Fontisto name="history" size={20} color={color} />
+                    ),
                 }}
             />
         </Tabs>

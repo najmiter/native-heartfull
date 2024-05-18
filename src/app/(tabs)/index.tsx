@@ -1,37 +1,56 @@
 import { useState } from "react";
-import { StyleSheet, View, Text, Pressable, Button } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useFonts } from "expo-font";
 
-export default function TabOneScreen() {
+import { days } from "@/src/constants/Types";
+import { qalmas } from "@/src/constants/qalma";
+import { Styles } from "@/src/constants/Styles";
+
+export default function HomeScreen() {
     const [count, setCount] = useState<number>(0);
-    const target = 10;
 
-    const aspectRatio = count !== 0 ? 1 / (count / target) : 0;
+    const [AmiriBold] = useFonts({
+        "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
+    });
+
+    const today = new Date().getDay() as days;
+    const target = qalmas.target;
+    const loop = Math.trunc((count + 1) / target);
+    const displayCount = (count % target) + Number(count > 1);
+
+    const aspectRatio = displayCount !== 0 ? 1 / (displayCount / target) : 0;
 
     function handleCounter() {
-        if (count % target === 0) setCount(1);
-        else setCount(count + 1);
+        setCount(count + 1);
     }
 
     return (
-        <View style={styles.container}>
-            <Button title="Reset" onPress={() => setCount(0)}></Button>
-            <Pressable onPress={handleCounter} style={[styles.container]}>
+        <View style={Styles.container}>
+            <Pressable onPress={handleCounter} style={[styles.counter]}>
                 <View style={styles.counterCircle}>
-                    <Text style={styles.counterText}>{count}</Text>
+                    <Text style={styles.counterText}>{displayCount}</Text>
                     <View style={[styles.filler, { aspectRatio }]} />
                 </View>
             </Pressable>
+            <Text style={Styles.qalma}>{qalmas[today].qalma}</Text>
+            <View style={styles.info}>
+                <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
+                <Text style={[Styles.text, styles.infoText]}>
+                    Target: {target}
+                </Text>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    counter: {
+        position: "absolute",
         flex: 1,
-        width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#111",
+        height: "100%",
+        width: "100%",
     },
     counterCircle: {
         width: 200,
@@ -57,5 +76,15 @@ const styles = StyleSheet.create({
         width: 200,
         aspectRatio: 1,
         backgroundColor: "#666",
+    },
+    info: {
+        alignItems: "center",
+        gap: 5,
+    },
+    infoText: {
+        backgroundColor: "#4447",
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 50,
     },
 });
