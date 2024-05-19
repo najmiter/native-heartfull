@@ -6,6 +6,7 @@ export const Styles = StyleSheet.create({
         fontSize: 30,
         textAlign: "center",
         color: "orange",
+        paddingVertical: 15,
     },
     text: {
         color: "#eee",

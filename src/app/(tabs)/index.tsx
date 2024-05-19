@@ -1,13 +1,29 @@
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { useState } from "react";
 import { useFonts } from "expo-font";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { qalmas } from "@/src/constants/qalma";
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
+import { useFocusEffect } from "expo-router";
 
 export default function HomeScreen() {
     const [count, setCount] = useState<number>(0);
+
+    useFocusEffect(function () {
+        const getData = async () => {
+            try {
+                const value = await AsyncStorage.getItem("count");
+                if (value !== null) {
+                    setCount(+value);
+                }
+            } catch (e) {
+                // error reading value
+            }
+        };
+        getData();
+    });
 
     const { currentQalma } = useBig();
 
@@ -23,6 +39,15 @@ export default function HomeScreen() {
 
     function handleCounter() {
         setCount(count + 1);
+        const storeData = async (value: number) => {
+            try {
+                await AsyncStorage.setItem("count", value.toString());
+            } catch (e) {
+                // saving error
+            }
+        };
+
+        storeData(count + 1);
     }
 
     return (
