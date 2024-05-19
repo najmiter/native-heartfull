@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 
-import { qalmas } from "@/src/constants/qalma";
 import { Styles } from "@/src/constants/Styles";
 import { days } from "@/src/constants/Types";
 import { useBig } from "@/src/contexts/BigContext";
@@ -29,9 +28,9 @@ export default function DetailsScreen() {
 }
 
 function EachQalma({ item }: { item: days }) {
-    const { setCurrentQalma } = useBig();
+    const { setCurrentQalma, qalmas } = useBig();
     const router = useRouter();
-    const qalma = qalmas[item as days].qalma;
+    const qalma = qalmas[item as days];
 
     function handleQalmaPress() {
         setCurrentQalma(qalma);
@@ -44,7 +43,7 @@ function EachQalma({ item }: { item: days }) {
             style={styles.qlamaContainer}
             key={item}
         >
-            <Text style={Styles.qalma}>{qalma}</Text>
+            <Text style={Styles.qalma}>{qalma.qalma}</Text>
         </Pressable>
     );
 }

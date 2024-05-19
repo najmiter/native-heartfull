@@ -1,4 +1,4 @@
-export const qalmas = {
+export const globalQalmas = {
     0: {
         qalma: "یَا ذَو الْجَلَالِ وَالْإِكْرَامِ",
         count: 0,

@@ -3,20 +3,28 @@ import { useState } from "react";
 import { useFonts } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { qalmas } from "@/src/constants/qalma";
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
 import { useFocusEffect } from "expo-router";
+import { globalQalmas } from "@/src/constants/qalma";
 
 export default function HomeScreen() {
-    const [count, setCount] = useState<number>(0);
+    const { qalmas, currentQalma, setQalmas, today } = useBig();
+
+    const count = currentQalma.count;
 
     useFocusEffect(function () {
         const getData = async () => {
             try {
-                const value = await AsyncStorage.getItem("count");
+                const value = await AsyncStorage.getItem("qalmas");
                 if (value !== null) {
-                    setCount(+value);
+                    const qalmas = JSON.parse(value);
+                    setQalmas(qalmas);
+                } else {
+                    await AsyncStorage.setItem(
+                        "qalmas",
+                        JSON.stringify(globalQalmas)
+                    );
                 }
             } catch (e) {
                 // error reading value
@@ -25,9 +33,7 @@ export default function HomeScreen() {
         getData();
     });
 
-    const { currentQalma } = useBig();
-
-    const [AmiriBold] = useFonts({
+    const [fontLoaded] = useFonts({
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
@@ -38,17 +44,22 @@ export default function HomeScreen() {
     const aspectRatio = displayCount !== 0 ? 1 / (displayCount / target) : 0;
 
     function handleCounter() {
-        setCount(count + 1);
-        const storeData = async (value: number) => {
+        const storeData = async () => {
             try {
-                await AsyncStorage.setItem("count", value.toString());
+                const newQalmas = { ...qalmas };
+                newQalmas[today].count = count;
+                setQalmas(newQalmas);
+                console.log(count);
+                await AsyncStorage.setItem("qalmas", JSON.stringify(newQalmas));
             } catch (e) {
                 // saving error
             }
         };
 
-        storeData(count + 1);
+        storeData();
     }
+
+    if (!fontLoaded) return null;
 
     return (
         <View style={Styles.container}>
@@ -58,7 +69,7 @@ export default function HomeScreen() {
                     <View style={[styles.filler, { aspectRatio }]} />
                 </View>
             </Pressable>
-            <Text style={Styles.qalma}>{currentQalma}</Text>
+            <Text style={Styles.qalma}>{currentQalma.qalma}</Text>
             <View style={styles.info}>
                 <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
                 <Text style={[Styles.text, styles.infoText]}>
