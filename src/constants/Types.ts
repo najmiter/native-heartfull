@@ -11,4 +11,6 @@ export type Context = {
     resetQalmaToTodays: () => void;
     qalmas: typeof globalQalmas;
     today: days;
+    getCurrentQalmaForDay: (d: days) => void;
+    updateCurrentQalmaLocally: () => void;
 };

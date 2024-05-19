@@ -28,12 +28,12 @@ export default function DetailsScreen() {
 }
 
 function EachQalma({ item }: { item: days }) {
-    const { setCurrentQalma, qalmas } = useBig();
+    const { getCurrentQalmaForDay, qalmas } = useBig();
     const router = useRouter();
-    const qalma = qalmas[item as days];
+    const qalma = { ...qalmas[item as days] };
 
     function handleQalmaPress() {
-        setCurrentQalma(qalma);
+        getCurrentQalmaForDay(item);
         router.replace("/");
     }
 
