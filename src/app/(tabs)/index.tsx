@@ -1,19 +1,20 @@
-import { useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useState } from "react";
 import { useFonts } from "expo-font";
 
-import { days } from "@/src/constants/Types";
 import { qalmas } from "@/src/constants/qalma";
 import { Styles } from "@/src/constants/Styles";
+import { useBig } from "@/src/contexts/BigContext";
 
 export default function HomeScreen() {
     const [count, setCount] = useState<number>(0);
+
+    const { currentQalma } = useBig();
 
     const [AmiriBold] = useFonts({
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
-    const today = new Date().getDay() as days;
     const target = qalmas.target;
     const loop = Math.trunc((count + 1) / target);
     const displayCount = (count % target) + Number(count > 1);
@@ -32,7 +33,7 @@ export default function HomeScreen() {
                     <View style={[styles.filler, { aspectRatio }]} />
                 </View>
             </Pressable>
-            <Text style={Styles.qalma}>{qalmas[today].qalma}</Text>
+            <Text style={Styles.qalma}>{currentQalma}</Text>
             <View style={styles.info}>
                 <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
                 <Text style={[Styles.text, styles.infoText]}>

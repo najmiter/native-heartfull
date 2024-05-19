@@ -3,8 +3,11 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
+import { useBig } from "@/src/contexts/BigContext";
 
 export default function TabLayout() {
+    const { resetQalmaToTodays } = useBig();
+
     return (
         <Tabs
             screenOptions={{
@@ -20,7 +23,7 @@ export default function TabLayout() {
                 headerTitleAlign: "center",
                 headerTintColor: "#eee",
                 headerLeft: () => (
-                    <Pressable>
+                    <Pressable onPress={resetQalmaToTodays}>
                         {({ pressed }) => (
                             <FontAwesome
                                 name="repeat"
