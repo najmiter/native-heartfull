@@ -25,7 +25,6 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
 
     const [qalmas, setQalmas] = useState(globalQalmas);
     const [currentQalma, setCurrentQalma] = useState({ ...qalmas[today] });
-    console.log(currentQalma);
 
     useEffect(function () {
         AsyncStorage.getItem("isFirstUse")
@@ -40,7 +39,6 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
                         )
                     );
                 } else {
-                    // AsyncStorage.setItem("isFirstUse", "");
                     getCurrentQalmaForDay(today);
                 }
             })

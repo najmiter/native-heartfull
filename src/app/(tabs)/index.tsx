@@ -3,20 +3,30 @@ import { useFonts } from "expo-font";
 
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
+import { useEffect, useState } from "react";
 
 export default function HomeScreen() {
     const { currentQalma, setCurrentQalma, updateCurrentQalmaLocally } =
         useBig();
+
+    const [count, setCount] = useState(currentQalma.count);
+
+    useEffect(
+        function () {
+            setCount(currentQalma.count);
+        },
+        [currentQalma]
+    );
 
     const [fontLoaded] = useFonts({
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
     function handleCount() {
-        setCurrentQalma(() => ({
+        setCurrentQalma({
             ...currentQalma,
             count: currentQalma.count + 1,
-        }));
+        });
         updateCurrentQalmaLocally();
     }
 
@@ -26,7 +36,7 @@ export default function HomeScreen() {
         <View style={Styles.container}>
             <Pressable onPress={handleCount} style={[styles.counter]}>
                 <View style={styles.counterCircle}>
-                    <Text style={styles.counterText}>{currentQalma.count}</Text>
+                    <Text style={styles.counterText}>{count}</Text>
                     <View style={[styles.filler]} />
                 </View>
             </Pressable>

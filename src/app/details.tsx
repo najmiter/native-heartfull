@@ -12,6 +12,8 @@ import { useRouter } from "expo-router";
 import { Styles } from "@/src/constants/Styles";
 import { days } from "@/src/constants/Types";
 import { useBig } from "@/src/contexts/BigContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
 
 export default function DetailsScreen() {
     return (
@@ -32,6 +34,11 @@ function EachQalma({ item }: { item: days }) {
     const router = useRouter();
     const qalma = { ...qalmas[item as days] };
 
+    const [count, setCount] = useState(0);
+    (async () => await AsyncStorage.getItem(`qalma_${item}`))().then((c) =>
+        setCount(JSON.parse(c ?? "{}")?.count)
+    );
+
     function handleQalmaPress() {
         getCurrentQalmaForDay(item);
         router.replace("/");
@@ -44,6 +51,9 @@ function EachQalma({ item }: { item: days }) {
             key={item}
         >
             <Text style={Styles.qalma}>{qalma.qalma}</Text>
+            <View>
+                <Text style={Styles.text}>Count: {count}</Text>
+            </View>
         </Pressable>
     );
 }
