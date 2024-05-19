@@ -6,6 +6,7 @@ import {
     Text,
     FlatList,
     Pressable,
+    ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -16,7 +17,7 @@ import { useBig } from "@/src/contexts/BigContext";
 
 export default function DetailsScreen() {
     return (
-        <View style={Styles.container}>
+        <ScrollView style={Styles.container}>
             <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
 
             <FlatList
@@ -24,7 +25,7 @@ export default function DetailsScreen() {
                 data={[0, 1, 2, 3, 4, 5, 6] as days[]}
                 renderItem={({ item }) => <EachQalma item={item} />}
             />
-        </View>
+        </ScrollView>
     );
 }
 
