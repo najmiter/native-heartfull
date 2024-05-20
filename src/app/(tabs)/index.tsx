@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable, Vibration } from "react-native";
 import { useFonts } from "expo-font";
 
 import { Styles } from "@/src/constants/Styles";
@@ -12,19 +12,29 @@ export default function HomeScreen() {
     const [count, setCount] = useState(0);
     const [currentQalmaText, setCurrentQalmaText] = useState("");
 
-    useEffect(function () {
-        AsyncStorage.getItem(`qalma_${currentQalma}`).then((q) => {
-            const qalma = JSON.parse(q ?? "{}");
-            setCount(qalma?.count);
-            setCurrentQalmaText(qalma?.qalma);
-        });
-    }, []);
+    const target = 100;
+    const loop = Math.trunc(count / target);
+
+    const aspectRatio = count % target ? 1 / ((count % target) / target) : 1;
+
+    useEffect(
+        function () {
+            AsyncStorage.getItem(`qalma_${currentQalma}`).then((q) => {
+                const qalma = JSON.parse(q ?? "{}");
+                setCount(qalma?.count);
+                setCurrentQalmaText(qalma?.qalma);
+            });
+        },
+        [currentQalma]
+    );
 
     const [fontLoaded] = useFonts({
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
     function handleCount() {
+        if ((count + 1) % target === 0) Vibration.vibrate(100);
+
         setCount(count + 1);
         updateCurrentQalmaLocally();
     }
@@ -35,15 +45,17 @@ export default function HomeScreen() {
         <View style={Styles.container}>
             <Pressable onPress={handleCount} style={[styles.counter]}>
                 <View style={styles.counterCircle}>
-                    <Text style={styles.counterText}>{count}</Text>
-                    <View style={[styles.filler]} />
+                    <Text style={styles.counterText}>
+                        {count % target || target}
+                    </Text>
+                    <View style={[styles.filler, { aspectRatio }]} />
                 </View>
             </Pressable>
             <Text style={Styles.qalma}>{currentQalmaText}</Text>
             <View style={styles.info}>
-                <Text style={[Styles.text, styles.infoText]}>Loop: {0}</Text>
+                <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
                 <Text style={[Styles.text, styles.infoText]}>
-                    Target: {100}
+                    Target: {target}
                 </Text>
             </View>
         </View>
@@ -58,6 +70,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: "100%",
         width: "100%",
+        zIndex: 10,
     },
     counterCircle: {
         width: 200,
