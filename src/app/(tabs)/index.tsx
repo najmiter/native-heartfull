@@ -1,21 +1,30 @@
-import { StyleSheet, View, Text, Pressable, Vibration } from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    Pressable,
+    Vibration,
+    GestureResponderEvent,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
     const { currentQalma, updateCurrentQalmaLocally } = useBig();
 
     const [count, setCount] = useState(0);
     const [currentQalmaText, setCurrentQalmaText] = useState("");
+    const [touchStart, setTouchStart] = useState(0);
 
     const target = 100;
     const loop = Math.trunc(count / target);
 
-    const aspectRatio = count % target ? 1 / ((count % target) / target) : 1;
+    const aspectRatio =
+        count === 0 ? 0 : count % target ? 1 / ((count % target) / target) : 1;
 
     useEffect(
         function () {
@@ -32,21 +41,34 @@ export default function HomeScreen() {
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
-    function handleCount() {
+    function handleTouchStart(e: GestureResponderEvent) {
+        setTouchStart(e.nativeEvent.locationX);
+    }
+
+    function handleTouchEnd(e: GestureResponderEvent) {
         if ((count + 1) % target === 0) Vibration.vibrate(100);
 
-        setCount(count + 1);
-        updateCurrentQalmaLocally();
+        const touchEnd = e.nativeEvent.locationX;
+        const by = touchEnd - touchStart > 70 ? -1 : 1;
+
+        if (count === 0 && by < 0) return;
+
+        setCount(count + by);
+        updateCurrentQalmaLocally(by);
     }
 
     if (!fontLoaded) return null;
 
     return (
         <View style={Styles.container}>
-            <Pressable onPress={handleCount} style={[styles.counter]}>
+            <Pressable
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                style={[styles.counter]}
+            >
                 <View style={styles.counterCircle}>
                     <Text style={styles.counterText}>
-                        {count % target || target}
+                        {count % target || (count > 0 ? target : 0)}
                     </Text>
                     <View style={[styles.filler, { aspectRatio }]} />
                 </View>

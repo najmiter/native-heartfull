@@ -53,7 +53,7 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
         setCurrentQalma(day);
     }
 
-    function updateCurrentQalmaLocally() {
+    function updateCurrentQalmaLocally(by = 1) {
         AsyncStorage.getItem(`qalma_${currentQalma}`).then((qalma) => {
             const oQalma = JSON.parse(qalma ?? "{}");
             const at = qalmas.findIndex(
@@ -65,7 +65,7 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
                     `qalma_${at}`,
                     JSON.stringify({
                         ...oQalma,
-                        count: oQalma.count + 1,
+                        count: oQalma.count + by,
                     })
                 );
             }
