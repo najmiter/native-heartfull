@@ -14,21 +14,12 @@ import { useFonts } from "expo-font";
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
 
-const weekdays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-];
-
 export default function HomeScreen() {
     const { currentQalma, updateCurrentQalmaLocally, target } = useBig();
 
     const [count, setCount] = useState(0);
     const [currentQalmaText, setCurrentQalmaText] = useState("");
+    const [weekday, setWeekday] = useState("");
     const [touchStart, setTouchStart] = useState(0);
 
     const loop = Math.trunc(count / target);
@@ -41,6 +32,7 @@ export default function HomeScreen() {
                 const qalma = JSON.parse(q ?? "{}");
                 setCount(qalma?.count);
                 setCurrentQalmaText(qalma?.qalma);
+                setWeekday(qalma?.day);
             });
         },
         [currentQalma]
@@ -97,9 +89,7 @@ export default function HomeScreen() {
                 </ImageBackground>
             </Pressable>
             <View style={styles.header}>
-                <Text style={Styles.text}>
-                    On {weekdays.at(currentQalma)}, you'll say
-                </Text>
+                <Text style={Styles.text}>On {weekday}, you'll say</Text>
                 <Text style={Styles.qalma}>{currentQalmaText}</Text>
             </View>
             <View style={styles.info}>
