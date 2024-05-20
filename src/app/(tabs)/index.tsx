@@ -6,6 +6,7 @@ import {
     Vibration,
     GestureResponderEvent,
     ImageBackground,
+    ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
@@ -58,25 +59,36 @@ export default function HomeScreen() {
         updateCurrentQalmaLocally(by);
     }
 
-    if (!fontLoaded) return null;
-
     return (
         <ImageBackground
             resizeMode="cover"
             source={require("@/assets/images/bg.png")}
             style={Styles.container}
         >
+            {!fontLoaded && (
+                <ActivityIndicator size="large" color="lightskyblue" />
+            )}
             <Pressable
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
                 style={[styles.counter]}
             >
-                <View style={styles.counterCircle}>
+                <ImageBackground
+                    resizeMode="cover"
+                    source={
+                        count % target
+                            ? require(
+                                  `@/assets/images/counterCircleInProgress.png`
+                              )
+                            : require(`@/assets/images/counterCircleFull.png`)
+                    }
+                    style={styles.counterCircle}
+                >
                     <Text style={styles.counterText}>
                         {count % target || (count > 0 ? target : 0)}
                     </Text>
                     <View style={[styles.filler, { aspectRatio }]} />
-                </View>
+                </ImageBackground>
             </Pressable>
             <Text style={Styles.qalma}>{currentQalmaText}</Text>
             <View style={styles.info}>
@@ -102,7 +114,7 @@ const styles = StyleSheet.create({
     counterCircle: {
         width: 200,
         aspectRatio: 1,
-        backgroundColor: "#888",
+        backgroundColor: "transparent",
         borderRadius: 100,
         position: "relative",
         alignItems: "center",
@@ -110,7 +122,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     counterText: {
-        color: "#222",
+        color: "#ddd",
         fontSize: 70,
         fontFamily: "monospace",
         fontWeight: "bold",
@@ -122,7 +134,7 @@ const styles = StyleSheet.create({
         left: 0,
         width: 200,
         aspectRatio: 1,
-        backgroundColor: "#666",
+        backgroundColor: "#2226",
     },
     info: {
         alignItems: "center",

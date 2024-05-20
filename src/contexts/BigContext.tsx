@@ -18,6 +18,8 @@ const BigContext = createContext<Context>({
     today: 0,
     getCurrentQalmaForDay: () => {},
     updateCurrentQalmaLocally: () => {},
+    isLoading: false,
+    setIsLoading: () => {},
 });
 
 export const BigProvider = ({ children }: PropsWithChildren) => {
@@ -25,6 +27,7 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
 
     const [qalmas, setQalmas] = useState(globalQalmas);
     const [currentQalma, setCurrentQalma] = useState(today);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(function () {
         AsyncStorage.getItem("isFirstUse")
@@ -77,8 +80,10 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
             value={{
                 today,
                 qalmas,
+                isLoading,
                 setQalmas,
                 currentQalma,
+                setIsLoading,
                 setCurrentQalma,
                 resetQalmaToTodays,
                 getCurrentQalmaForDay,

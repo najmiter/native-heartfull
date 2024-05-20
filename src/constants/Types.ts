@@ -13,4 +13,6 @@ export type Context = {
     today: days;
     getCurrentQalmaForDay: (d: days) => void;
     updateCurrentQalmaLocally: (by?: number) => void;
+    isLoading: boolean;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
