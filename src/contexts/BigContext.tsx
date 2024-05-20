@@ -10,7 +10,7 @@ import { Context, days } from "@/src/constants/Types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BigContext = createContext<Context>({
-    currentQalma: { qalma: "", count: 0, loop: 0 },
+    currentQalma: 0,
     setCurrentQalma: () => {},
     resetQalmaToTodays: () => {},
     qalmas: globalQalmas,
@@ -24,7 +24,7 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
     const today = new Date().getDay() as days;
 
     const [qalmas, setQalmas] = useState(globalQalmas);
-    const [currentQalma, setCurrentQalma] = useState({ ...qalmas[today] });
+    const [currentQalma, setCurrentQalma] = useState(today);
 
     useEffect(function () {
         AsyncStorage.getItem("isFirstUse")
@@ -46,29 +46,30 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
     }, []);
 
     function resetQalmaToTodays() {
-        setCurrentQalma(qalmas[today]);
+        setCurrentQalma(today);
     }
 
     function getCurrentQalmaForDay(day: days) {
-        AsyncStorage.getItem(`qalma_${day}`).then((data) =>
-            setCurrentQalma(JSON.parse(data ?? "{}"))
-        );
+        setCurrentQalma(day);
     }
 
     function updateCurrentQalmaLocally() {
-        const at = qalmas.findIndex(
-            (qalma) => qalma.qalma === currentQalma.qalma
-        );
-
-        if (at !== -1) {
-            AsyncStorage.setItem(
-                `qalma_${at}`,
-                JSON.stringify({
-                    ...currentQalma,
-                    count: currentQalma.count + 1,
-                })
+        AsyncStorage.getItem(`qalma_${currentQalma}`).then((qalma) => {
+            const oQalma = JSON.parse(qalma ?? "{}");
+            const at = qalmas.findIndex(
+                (qalma) => qalma.qalma === oQalma.qalma
             );
-        }
+
+            if (at !== -1) {
+                AsyncStorage.setItem(
+                    `qalma_${at}`,
+                    JSON.stringify({
+                        ...oQalma,
+                        count: oQalma.count + 1,
+                    })
+                );
+            }
+        });
     }
 
     return (

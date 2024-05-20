@@ -4,29 +4,28 @@ import { useFonts } from "expo-font";
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
 import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen() {
-    const { currentQalma, setCurrentQalma, updateCurrentQalmaLocally } =
-        useBig();
+    const { currentQalma, updateCurrentQalmaLocally } = useBig();
 
-    const [count, setCount] = useState(currentQalma.count);
+    const [count, setCount] = useState(0);
+    const [currentQalmaText, setCurrentQalmaText] = useState("");
 
-    useEffect(
-        function () {
-            setCount(currentQalma.count);
-        },
-        [currentQalma]
-    );
+    useEffect(function () {
+        AsyncStorage.getItem(`qalma_${currentQalma}`).then((q) => {
+            const qalma = JSON.parse(q ?? "{}");
+            setCount(qalma?.count);
+            setCurrentQalmaText(qalma?.qalma);
+        });
+    }, []);
 
     const [fontLoaded] = useFonts({
         "Amiri-Bold": require("@/assets/fonts/Amiri-Bold.ttf"),
     });
 
     function handleCount() {
-        setCurrentQalma({
-            ...currentQalma,
-            count: currentQalma.count + 1,
-        });
+        setCount(count + 1);
         updateCurrentQalmaLocally();
     }
 
@@ -40,7 +39,7 @@ export default function HomeScreen() {
                     <View style={[styles.filler]} />
                 </View>
             </Pressable>
-            <Text style={Styles.qalma}>{currentQalma.qalma}</Text>
+            <Text style={Styles.qalma}>{currentQalmaText}</Text>
             <View style={styles.info}>
                 <Text style={[Styles.text, styles.infoText]}>Loop: {0}</Text>
                 <Text style={[Styles.text, styles.infoText]}>
