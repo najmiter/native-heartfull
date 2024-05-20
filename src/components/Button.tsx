@@ -20,14 +20,16 @@ export default function Button({ text, onPress }: ButtonProps) {
 
 const styles = StyleSheet.create({
     text: {
-        color: "#333",
-        fontWeight: "bold",
+        color: "#ffa5008a",
+        fontWeight: "semibold",
     },
 
     btn: {
         padding: 10,
         paddingHorizontal: 20,
-        backgroundColor: "lightskyblue",
+        backgroundColor: "#21262d",
+        borderColor: "#333",
+        borderWidth: 2,
         borderRadius: 5,
     },
 });

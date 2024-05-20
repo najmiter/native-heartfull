@@ -20,10 +20,12 @@ const BigContext = createContext<Context>({
     updateCurrentQalmaLocally: () => {},
     isLoading: false,
     setIsLoading: () => {},
+    target: 0,
 });
 
 export const BigProvider = ({ children }: PropsWithChildren) => {
     const today = new Date().getDay() as days;
+    const target = 100;
 
     const [qalmas, setQalmas] = useState(globalQalmas);
     const [currentQalma, setCurrentQalma] = useState(today);
@@ -79,6 +81,7 @@ export const BigProvider = ({ children }: PropsWithChildren) => {
         <BigContext.Provider
             value={{
                 today,
+                target,
                 qalmas,
                 isLoading,
                 setQalmas,

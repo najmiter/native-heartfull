@@ -14,16 +14,24 @@ import { useFonts } from "expo-font";
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
 
+const weekdays = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
+
 export default function HomeScreen() {
-    const { currentQalma, updateCurrentQalmaLocally } = useBig();
+    const { currentQalma, updateCurrentQalmaLocally, target } = useBig();
 
     const [count, setCount] = useState(0);
     const [currentQalmaText, setCurrentQalmaText] = useState("");
     const [touchStart, setTouchStart] = useState(0);
 
-    const target = 100;
     const loop = Math.trunc(count / target);
-
     const aspectRatio =
         count === 0 ? 0 : count % target ? 1 / ((count % target) / target) : 1;
 
@@ -88,7 +96,12 @@ export default function HomeScreen() {
                     <View style={[styles.filler, { aspectRatio }]} />
                 </ImageBackground>
             </Pressable>
-            <Text style={Styles.qalma}>{currentQalmaText}</Text>
+            <View style={styles.header}>
+                <Text style={Styles.text}>
+                    On {weekdays.at(currentQalma)}, you'll say
+                </Text>
+                <Text style={Styles.qalma}>{currentQalmaText}</Text>
+            </View>
             <View style={styles.info}>
                 <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
                 <Text style={[Styles.text, styles.infoText]}>
@@ -100,6 +113,10 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+    header: {
+        flex: 1,
+        alignItems: "center",
+    },
     counter: {
         position: "absolute",
         flex: 1,

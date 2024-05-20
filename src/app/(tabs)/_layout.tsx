@@ -2,7 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Image, Pressable } from "react-native";
 import { useBig } from "@/src/contexts/BigContext";
 
 export default function TabLayout() {
