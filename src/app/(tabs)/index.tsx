@@ -6,7 +6,6 @@ import {
     Vibration,
     GestureResponderEvent,
     ImageBackground,
-    ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
@@ -59,15 +58,14 @@ export default function HomeScreen() {
         updateCurrentQalmaLocally(by);
     }
 
+    if (!fontLoaded) return null;
+
     return (
         <ImageBackground
             resizeMode="cover"
             source={require("@/assets/images/bg.png")}
             style={Styles.container}
         >
-            {!fontLoaded && (
-                <ActivityIndicator size="large" color="lightskyblue" />
-            )}
             <Pressable
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
