@@ -5,6 +5,7 @@ import {
     Pressable,
     Vibration,
     GestureResponderEvent,
+    ImageBackground,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
@@ -60,7 +61,10 @@ export default function HomeScreen() {
     if (!fontLoaded) return null;
 
     return (
-        <View style={Styles.container}>
+        <ImageBackground
+            source={require("@/assets/images/bg.png")}
+            style={Styles.container}
+        >
             <Pressable
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
@@ -80,7 +84,7 @@ export default function HomeScreen() {
                     Target: {target}
                 </Text>
             </View>
-        </View>
+        </ImageBackground>
     );
 }
 
