@@ -26,7 +26,7 @@ export default function DetailsScreen() {
             <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
 
             <FlatList
-                style={styles.list}
+                contentContainerStyle={styles.list}
                 data={[0, 1, 2, 3, 4, 5, 6] as days[]}
                 renderItem={({ item }) => (
                     <EachQalma
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#4447",
         paddingHorizontal: 10,
         borderRadius: 20,
-        marginBottom: 10,
     },
     details: {
         paddingHorizontal: 10,

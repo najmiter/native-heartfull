@@ -1,6 +1,8 @@
 import { Stack } from "expo-router";
 import "react-native-reanimated";
 import { BigProvider } from "../contexts/BigContext";
+import { StatusBar } from "expo-status-bar";
+import { Platform } from "react-native";
 
 export default function RootLayout() {
     return (
@@ -16,7 +18,7 @@ export default function RootLayout() {
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen
                     name="details"
-                    options={{ presentation: "modal" }}
+                    options={{ presentation: "modal", title: "Qalmas" }}
                 />
             </Stack>
         </BigProvider>

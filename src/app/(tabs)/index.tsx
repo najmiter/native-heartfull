@@ -6,6 +6,7 @@ import {
     Vibration,
     GestureResponderEvent,
     ImageBackground,
+    Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import { useFonts } from "expo-font";
 
 import { Styles } from "@/src/constants/Styles";
 import { useBig } from "@/src/contexts/BigContext";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen() {
     const { currentQalma, updateCurrentQalmaLocally, target } = useBig();
@@ -22,7 +24,7 @@ export default function HomeScreen() {
     const [weekday, setWeekday] = useState("");
     const [touchStart, setTouchStart] = useState(0);
 
-    const loop = Math.trunc(count / target);
+    const loop = Math.trunc(count / target) || 0;
     const aspectRatio =
         count === 0 ? 0 : count % target ? 1 / ((count % target) / target) : 1;
 
@@ -66,6 +68,8 @@ export default function HomeScreen() {
             source={require("@/assets/images/bg.png")}
             style={Styles.container}
         >
+            <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
+
             <Pressable
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
@@ -93,10 +97,8 @@ export default function HomeScreen() {
                 <Text style={Styles.qalma}>{currentQalmaText}</Text>
             </View>
             <View style={styles.info}>
-                <Text style={[Styles.text, styles.infoText]}>Loop: {loop}</Text>
-                <Text style={[Styles.text, styles.infoText]}>
-                    Target: {target}
-                </Text>
+                <Text style={styles.infoText}>Loop: {loop}</Text>
+                <Text style={styles.infoText}>Target: {target}</Text>
             </View>
         </ImageBackground>
     );
@@ -146,9 +148,11 @@ const styles = StyleSheet.create({
         gap: 5,
     },
     infoText: {
+        color: "#eee",
         backgroundColor: "#4447",
         padding: 10,
         paddingHorizontal: 20,
-        borderRadius: 50,
+        borderRadius: Platform.OS === "ios" ? 20 : 50,
+        overflow: "hidden",
     },
 });
